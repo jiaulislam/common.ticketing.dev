@@ -2,12 +2,11 @@ import { CustomError } from './base-error';
 import status from 'http-status-codes';
 
 export class NotAuthenticatedError extends CustomError {
-  public statusCode: number = status.NOT_FOUND;
+  public statusCode: number = status.UNAUTHORIZED;
   reason = 'Wrong username or password';
 
   constructor() {
     super('Wrong username or password');
-    // Set the prototype explicitly.
     Object.setPrototypeOf(this, NotAuthenticatedError.prototype);
   }
 
