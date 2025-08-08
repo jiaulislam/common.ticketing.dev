@@ -1,5 +1,5 @@
 {
-  "name": "@jiaulislam.dev/common.ticketing.dev",
+  "name": "@jiaul.islam/common.ticketing.dev",
   "version": "1.0.8",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
