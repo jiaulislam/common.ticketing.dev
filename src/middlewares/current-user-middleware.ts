@@ -1,8 +1,8 @@
-import {NextFunction, Request, Response} from 'express';
+import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
 interface UserPayload {
-    id: string;
+    id: number;
     email: string;
 }
 
@@ -28,7 +28,7 @@ export const currentUserMiddleware = (
             req.session.jwt,
             process.env.JWT_KEY!
         ) as UserPayload;
-    } catch (err) {}
+    } catch (err) { }
 
     next();
 };
