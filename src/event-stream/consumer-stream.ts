@@ -7,8 +7,9 @@ const { Kafka } = require('@confluentinc/kafka-javascript').KafkaJS;
 export abstract class BaseConsumer<T> {
     protected kafka: typeof Kafka;
     protected consumer: Consumer;
+    protected topic: string;
 
-    constructor(config: ConsumerGlobalAndTopicConfig) {
+    constructor(config: ConsumerGlobalAndTopicConfig, topic: string) {
         this.kafka = new Kafka({
             "bootstrap.servers": process.env.KAFKA_BOOTSTRAP_SERVERS!,
             "security.protocol": process.env.KAFKA_SASL_PROTOCOL!,
@@ -20,6 +21,7 @@ export abstract class BaseConsumer<T> {
         });
 
         this.consumer = this.kafka.consumer(config);
+        this.topic = topic;
     }
 
     async connect() {
@@ -32,7 +34,7 @@ export abstract class BaseConsumer<T> {
 
     abstract handleMessage(message: ProducerMessage<T>): void;
 
-    async consume(topic: string) {
+    async consume() {
         // setup graceful shutdown
         const disconnect = () => {
             this.consumer.commitOffsets().finally(() => {
@@ -46,7 +48,7 @@ export abstract class BaseConsumer<T> {
         await this.consumer.connect();
 
         // subscribe to the topic
-        await this.consumer.subscribe({ topic });
+        await this.consumer.subscribe({ topic: this.topic });
 
         // consume messages from the topic
         this.consumer.run({
