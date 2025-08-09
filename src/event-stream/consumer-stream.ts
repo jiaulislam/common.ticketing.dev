@@ -1,13 +1,14 @@
 import { Consumer, ConsumerGlobalAndTopicConfig, EachMessagePayload } from "@confluentinc/kafka-javascript/types/kafkajs";
+import { ProducerMessage } from "./producer-stream";
 
 const { Kafka } = require('@confluentinc/kafka-javascript').KafkaJS;
 
 
-export abstract class BaseConsumer {
+export abstract class BaseConsumer<T> {
     protected kafka: typeof Kafka;
     protected consumer: Consumer;
 
-    constructor() {
+    constructor(config: ConsumerGlobalAndTopicConfig) {
         this.kafka = new Kafka({
             "bootstrap.servers": process.env.KAFKA_BOOTSTRAP_SERVERS!,
             "security.protocol": process.env.KAFKA_SASL_PROTOCOL!,
@@ -18,7 +19,7 @@ export abstract class BaseConsumer {
             "client.id": process.env.KAFKA_CLIENT_ID!,
         });
 
-        this.consumer = this.kafka.consumer();
+        this.consumer = this.kafka.consumer(config);
     }
 
     async connect() {
@@ -29,33 +30,30 @@ export abstract class BaseConsumer {
         await this.consumer.disconnect();
     }
 
-    async consume(topic: string, config: ConsumerGlobalAndTopicConfig) {
+    abstract handleMessage(message: ProducerMessage<T>): void;
+
+    async consume(topic: string) {
         // setup graceful shutdown
         const disconnect = () => {
-            consumer.commitOffsets().finally(() => {
-                consumer.disconnect();
+            this.consumer.commitOffsets().finally(() => {
+                this.consumer.disconnect();
             });
         };
         process.on("SIGTERM", disconnect);
         process.on("SIGINT", disconnect);
 
-        // set the consumer's group ID, offset and initialize it
-        config["group.id"] = "nodejs-group-1";
-        config["auto.offset.reset"] = "earliest";
-        const consumer = new Kafka().consumer(config);
-
         // connect the consumer to the broker
-        await consumer.connect();
+        await this.consumer.connect();
 
         // subscribe to the topic
-        await consumer.subscribe({ topics: [topic] });
+        await this.consumer.subscribe({ topic });
 
         // consume messages from the topic
-        consumer.run({
-            eachMessage: async ({ topic, partition, message }: EachMessagePayload) => {
-                console.log(
-                    `Consumed message from topic ${topic}, partition ${partition}: key = ${message.key?.toString()}, value = ${message.value?.toString()}`
-                );
+        this.consumer.run({
+            eachMessage: async ({ message }: EachMessagePayload): Promise<void> => {
+                console.log(`Received message: ${message.value?.toString()}`);
+                const parsed = JSON.parse(message.value?.toString() || '{}') as ProducerMessage<T>;
+                this.handleMessage(parsed);
             },
         });
     }
