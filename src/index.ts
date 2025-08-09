@@ -15,3 +15,5 @@ export * from './middlewares/validate-request-middleware';
 
 // events
 export * from './events';
+
+export * from './event-stream';
