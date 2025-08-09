@@ -17,6 +17,7 @@
   "license": "ISC",
   "description": "Common utilities and types for the ticketing application",
   "dependencies": {
+    "@confluentinc/kafka-javascript": "^1.4.0",
     "@types/cookie-session": "^2.0.49",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
