@@ -10,7 +10,7 @@ export interface ProducerMessage<T> {
     data: T;
 }
 
-export abstract class BaseProducer {
+export abstract class BaseProducer<T> {
     protected kafka: typeof Kafka;
     protected producer: Producer;
     abstract readonly topic: string;
@@ -37,7 +37,7 @@ export abstract class BaseProducer {
         await this.producer.disconnect();
     }
 
-    async produce<T>(value: ProducerMessage<T>) {
+    async produce(value: ProducerMessage<T>) {
         const produceRecord = await this.producer.send({
             topic: this.topic,
             messages: [{ value: JSON.stringify(value) }],
