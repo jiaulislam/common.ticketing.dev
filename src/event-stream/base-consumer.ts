@@ -1,5 +1,4 @@
 import { Consumer, ConsumerGlobalAndTopicConfig, EachMessagePayload } from "@confluentinc/kafka-javascript/types/kafkajs";
-import { ProducerMessage } from "./producer-stream";
 
 const { Kafka } = require('@confluentinc/kafka-javascript').KafkaJS;
 
@@ -32,7 +31,7 @@ export abstract class BaseConsumer<T> {
         await this.consumer.disconnect();
     }
 
-    abstract handleMessage(message: ProducerMessage<T>): void;
+    abstract handleMessage(message: T): void;
 
     async consume() {
         // setup graceful shutdown
@@ -48,13 +47,13 @@ export abstract class BaseConsumer<T> {
         await this.consumer.connect();
 
         // subscribe to the topic
-        await this.consumer.subscribe({ topic: this.topic });
+        await this.consumer.subscribe({ topics: [this.topic] });
 
         // consume messages from the topic
         this.consumer.run({
             eachMessage: async ({ message }: EachMessagePayload): Promise<void> => {
                 console.log(`Received message: ${message.value?.toString()}`);
-                const parsed = JSON.parse(message.value?.toString() || '{}') as ProducerMessage<T>;
+                const parsed = JSON.parse(message.value?.toString() || '{}') as T;
                 this.handleMessage(parsed);
             },
         });

@@ -1,2 +1,2 @@
-export { BaseConsumer } from "./consumer-stream";
-export { BaseProducer, ProducerMessage } from "./producer-stream";
+export { BaseConsumer } from "./base-consumer";
+export { BaseEventPublisher, BaseKafka } from "./base-publisher";
