@@ -7,7 +7,7 @@ export abstract class BaseModelService<Delegate extends {
 }, Entity, CreateInput = Partial<Entity>, UpdateInput = Partial<Entity>> {
     protected abstract getModel(): Delegate;
 
-    public async findById(id: string): Promise<Entity | null> {
+    public async findById(id: number): Promise<Entity | null> {
         const model = this.getModel();
         return await model.findUnique({ where: { id } });
     }
