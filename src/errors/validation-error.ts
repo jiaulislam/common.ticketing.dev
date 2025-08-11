@@ -5,8 +5,9 @@ export class ValidationError extends CustomError {
     public statusCode: number = status.NOT_FOUND;
     reason = 'Validation error';
 
-    constructor() {
-        super('Validation error');
+    constructor(reason: string) {
+        super(reason);
+        this.reason = reason;
         // Set the prototype explicitly.
         Object.setPrototypeOf(this, ValidationError.prototype);
     }
