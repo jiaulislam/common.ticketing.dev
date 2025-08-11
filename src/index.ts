@@ -20,3 +20,6 @@ export * from './event-stream';
 
 // services
 export * from "./services";
+
+// enums
+export * from './enums/order-enums';
