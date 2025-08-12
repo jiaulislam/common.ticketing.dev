@@ -1,16 +1,16 @@
-import { Producer, CommonConstructorConfig } from "@confluentinc/kafka-javascript/types/kafkajs";
+import { Producer, ProducerConstructorConfig } from "@confluentinc/kafka-javascript/types/kafkajs";
 
 const { Kafka } = require('@confluentinc/kafka-javascript').KafkaJS;
 
 import { Subject } from "../events";
 
 
-export abstract class BaseKafka {
+export abstract class AbstractKafkaProducer {
     private kafka: typeof Kafka;
     private producer: Producer;
     abstract readonly clusterName: string;
 
-    constructor(config: CommonConstructorConfig | any) {
+    constructor(config: ProducerConstructorConfig) {
         this.kafka = new Kafka(config);
         this.producer = this.kafka.producer();
     }
@@ -33,7 +33,7 @@ export abstract class BaseKafka {
 
 }
 
-export abstract class BaseEventPublisher<T> {
+export abstract class AbstractEventProducer<T> {
     protected producer: Producer;
     abstract readonly topic: Subject;
 
