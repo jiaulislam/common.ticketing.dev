@@ -37,7 +37,6 @@ export abstract class AbstractKafkaConsumer {
     }
 
     async consume() {
-        await this.consumer.connect();
         await this.consumer.subscribe({ topics: this.topics });
 
         this.consumer.run({
