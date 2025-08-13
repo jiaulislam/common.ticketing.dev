@@ -16,7 +16,11 @@ export abstract class AbstractKafkaConsumer {
     constructor(config: KafkaConfig, topics: Subject[]) {
         this.kafka = new Kafka(config);
         this.topics = topics;
-        this.consumer = this.kafka.consumer({ groupId: process.env.KAFKA_GROUP_ID! });
+        this.consumer = this.kafka.consumer({ groupId: process.env.KAFKA_GROUP_ID || '' });
+    }
+
+    private setConsumer(config: ConsumerConfig) {
+        this.consumer = this.kafka.consumer(config);
     }
 
     async connect() {
