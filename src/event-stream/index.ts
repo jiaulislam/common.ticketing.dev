@@ -1,2 +1,2 @@
 export { AbstractKafkaConsumer } from "./base-consumer";
-export { AbstractEventProducer, AbstractKafkaProducer } from "./base-producer";
+export { AbstractKafkaEventProducer, AbstractKafkaProducer } from "./base-producer";
