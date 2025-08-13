@@ -1,7 +1,7 @@
-export {Subject} from "./subject"
+export { Subject } from "./subject"
 
-// ticket event interfaces
-export {TicketCreatedUpdatedEvent, TicketDeletedEvent} from "./ticket"
+// ticket event types
+export { TicketCreatedUpdatedEvent, TicketDeletedEvent } from "./ticket"
 
-// order event interfaces
-export {OrderCreatedUpdatedEvent, OrderDeletedEvent} from "./order"
+// order event types
+export { OrderCreatedUpdatedEvent, OrderDeletedEvent } from "./order"
