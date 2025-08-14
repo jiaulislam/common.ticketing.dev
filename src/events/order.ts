@@ -3,6 +3,7 @@ export type OrderCreatedUpdatedEvent = {
     status: string;
     userId: number;
     ticketId: number;
+    expiresAt?: string;
 }
 
 export type OrderDeletedEvent = {
