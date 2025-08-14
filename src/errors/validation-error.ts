@@ -2,7 +2,7 @@ import { CustomError } from './base-error';
 import status from 'http-status-codes';
 
 export class ValidationError extends CustomError {
-    public statusCode: number = status.NOT_FOUND;
+    public statusCode: number = status.BAD_REQUEST;
     reason = 'Validation error';
 
     constructor(reason: string = 'Validation error') {
