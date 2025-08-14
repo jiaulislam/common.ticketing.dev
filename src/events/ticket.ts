@@ -3,6 +3,7 @@ export type TicketCreatedUpdatedEvent = {
     title: string;
     price: number;
     userId: number;
+    version: number;
 }
 
 export type TicketDeletedEvent = {
